@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { createTask, deleteTask, updateTask, getTask } from '../api/tasks.api';
 import { useNavigate, useParams } from 'react-router-dom';
+import {toast} from 'react-hot-toast';
 
 export function TaskFormPage() {
 
@@ -17,9 +18,23 @@ export function TaskFormPage() {
 
     const onSubmit = handleSubmit(async data => {
         if (params.id) {
-            await updateTask(params.id, data)
+            await updateTask(params.id, data);
+            toast.success('Tarea actualizada', {
+                position: 'bottom-tight',
+                style: {
+                    background: '#101010',
+                    color: '#fff'
+                }
+            });
         } else {
             const res =  await createTask(data);
+            toast.success('Tarea creada', {
+                position: 'bottom-tight',
+                style: {
+                    background: '#101010',
+                    color: '#fff'
+                }
+            });
         }
         navigate('/tasks');
     });
@@ -36,27 +51,42 @@ export function TaskFormPage() {
     }, []);
 
     return(
-        <div>
+        <div className='max-w-xl mx-auto' >
             <form onSubmit={onSubmit}>
                 <input type="text" placeholder="Title" 
                 {...register("title", {required: true})}
+                className='bg-zinc-700 p-3 rounded-lg block w-full mb-3'
                 />
                 {errors.title && <span>title field is required</span>}
+
                 <textarea placeholder="Description"
                 {...register("description", {required: true})}
+                className='bg-zinc-700 p-3 rounded-lg block w-full mb-3'
                 ></textarea>
                 {errors.description && <span>description field is required</span>}
 
-                <button>Save</button>
+                <button className='bg-indigo-500 p-3 rounded-lg block w-full mt-3'>Save</button>
             </form>
 
-            {params.id && <button onClick={async () => {
-                const accepted = window.confirm('are you sure?');
-                if (accepted) {
-                    await deleteTask(params.id);
-                    navigate('/tasks');
-                }
-            }}>Delete</button>}
+            {params.id && 
+            <div className='flex justify-end'>
+                <button 
+                className='bg-red-500 p-3 rounded-lg w-48 mt-3'
+                onClick={async () => {
+                    const accepted = window.confirm('are you sure?');
+                    if (accepted) {
+                        await deleteTask(params.id);
+                        toast.success('Tarea Eliminada', {
+                            position: 'bottom-tight',
+                            style: {
+                                background: '#101010',
+                                color: '#fff'
+                            }
+                        });
+                        navigate('/tasks');
+                    }
+                }}>Delete</button>
+            </div>}
         </div>
 
     )
