@@ -19,7 +19,7 @@ python -m venv venv
 
 4. Activa el entorno virtual
 ```sh
-source venv/bin/active
+source venv/bin/activate
 ```
 
 5. Instalar las librerias requeridas
@@ -73,3 +73,6 @@ npm install
 ```sh
 npm run dev
 ```
+
+**nota**
+Es importante que este corriendo el servidor web de django (pasos del 3 al 10) de lo contrario no podra ver ninguna informacion de la base de datos.
